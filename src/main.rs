@@ -64,8 +64,9 @@ async fn update_user(firebase_client: &Firebase, id: &String, user: &User) -> Us
     return string_to_user(&user.unwrap().data);
 }
 
-async fn delete_user() {
-
+async fn delete_user(firebase_client: &Firebase, id: &String) {
+    let firebase = firebase_client.t("users").at(&id);
+    let _result = firebase.delete().await;
 }
 
 //convert string to response
