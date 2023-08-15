@@ -49,6 +49,7 @@ async fn get_users(firebase_client: &Firebase) -> HashMap<String, User> {
     let firebase = firebase_client.at("users");
     let users = firebase.get::<HashMap<String, User>>().await;
     println!("{:?}", users);
+    return users.unwrap();
 }
 
 async fn get_user(firebase_client: &Firebase, id: &String) -> User {
