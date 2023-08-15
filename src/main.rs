@@ -51,20 +51,22 @@ async fn get_users(firebase_client: &Firebase) -> HashMap<String, User> {
     println!("{:?}", users);
 }
 
-async fn get_user() -> User{
+async fn get_user(firebase_client: &Firebase, id: &String) -> User {
+    let firebase = firebase_client.at("users").at(&id);
+    let user = firebase.get::<User>().await;
+    return user.unwrap();
+}
+
+async fn update_user() -> User {
 
 }
 
-async fn update_user() -> User{
-
-}
-
-async fn delete_user(){
+async fn delete_user() {
 
 }
 
 //convert string to response
-fn string_to_response(s: &str) -> Response{
+fn string_to_response(s: &str) -> Response {
     serde_json::from_reader(s).unwrap()
 }
 
