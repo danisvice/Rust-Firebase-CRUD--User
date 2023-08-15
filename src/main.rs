@@ -58,8 +58,10 @@ async fn get_user(firebase_client: &Firebase, id: &String) -> User {
     return user.unwrap();
 }
 
-async fn update_user() -> User {
-
+async fn update_user(firebase_client: &Firebase, id: &String, user: &User) -> User {
+    let firebase = firebase_client.at("users").at(&id);
+    let _user = firebase.update::<User>(&user).await;
+    return string_to_user(&user.unwrap().data);
 }
 
 async fn delete_user() {
@@ -72,6 +74,6 @@ fn string_to_response(s: &str) -> Response {
 }
 
 //convert string to a user
-fn string_to_user(s: &str) -> User{
+fn string_to_user(s: &str) -> User {
     serde_json::from_reader(s).unwrap()
 }
