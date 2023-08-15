@@ -39,8 +39,10 @@ async fn main(){
     println!("User Deleted");
 }
 
-async fn set_user() -> Response{
-
+async fn set_user(firebase_client: &Firebase, user: &User) -> Response{
+    let firebase = firebase_client.at('users');
+    let _users = firebase.set::<User>(&user).await;
+    return string_to_response(&_users.unwrap().data);
 }
 
 async fn get_users() -> HashMap<String, User>{
