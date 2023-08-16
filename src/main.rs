@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use firebase_rs::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 struct User{
     name: String,
     age: u32,
@@ -34,11 +34,11 @@ async fn main(){
     println!("{:?}", users);
 
     user.email = "updated.mail@gmail.com".to_string();
-    let updated_user = update_user(&firebase, &response.name, &response, &user).await;
+    let updated_user = update_user(&firebase, &response.name, &user).await;
     println!("{:?}", updated_user);
 
     delete_user(&firebase, &response.name).await;
-    println!("User Deleted");
+    println!("User Deleted!");
 }
 
 async fn set_user(firebase_client: &Firebase, user: &User) -> Response {
@@ -63,7 +63,7 @@ async fn get_user(firebase_client: &Firebase, id: &String) -> User {
 async fn update_user(firebase_client: &Firebase, id: &String, user: &User) -> User {
     let firebase = firebase_client.at("users").at(&id);
     let _user = firebase.update::<User>(&user).await;
-    return string_to_user(&user.unwrap().data);
+    return string_to_user(&_user.unwrap().data);
 }
 
 async fn delete_user(firebase_client: &Firebase, id: &String) {
@@ -73,10 +73,10 @@ async fn delete_user(firebase_client: &Firebase, id: &String) {
 
 //convert string to response
 fn string_to_response(s: &str) -> Response {
-    serde_json::from_reader(s).unwrap()
+    serde_json::from_str(s).unwrap()
 }
 
 //convert string to a user
 fn string_to_user(s: &str) -> User {
-    serde_json::from_reader(s).unwrap()
+    serde_json::from_str(s).unwrap()
 }
