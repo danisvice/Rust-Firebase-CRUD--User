@@ -63,7 +63,7 @@ async fn get_user(firebase_client: &Firebase, id: &String) -> User {
 async fn update_user(firebase_client: &Firebase, id: &String, user: &User) -> User {
     let firebase = firebase_client.at("users").at(&id);
     let _user = firebase.update::<User>(&user).await;
-    return string_to_user(&user).unwrap().data();
+    return string_to_user(&user.unwrap().data);
 }
 
 async fn delete_user(firebase_client: &Firebase, id: &String) {
